@@ -39,12 +39,15 @@ class Main
 						:on_click_listener => proc { android_decrypt }
 				end
 			end
-
-		self.on_save_instance_state(proc { save_state })
 	rescue
 		puts "Exception creating activity: #{$!}"
 		puts $!.backtrace.join("\n")
 	end
+
+  def onSaveInstanceState(bundle)
+    bundle.putString("password", @password.text.to_string)
+    bundle.putString("hash", @hash.text.to_string)
+  end
 
 	private
 
@@ -56,8 +59,4 @@ class Main
 		@password.text = @hash.text.to_string.decrypt
 	end
 
-	def save_state(bundle)
-		bundle.putString("password", @password.text.to_string)
-		bundle.putString("hash", @hash.text.to_string)
-	end
 end
